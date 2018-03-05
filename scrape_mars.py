@@ -9,15 +9,14 @@ from flask_pymongo import PyMongo
 def init_browser():
 
     # @NOTE: Replace the path with your actual path to the chromedriver
-    executable_path = {'executable_path': 'chromedriver.exe'}
-    return Browser("chrome", **executable_path, headless=False)
+    # executable_path = {'executable_path': 'chromedriver.exe'}
+    return Browser("chrome", headless=False)
 
 
 
 
 def strip():
 
-'''
 	url = 'https://mars.nasa.gov/news/'
 	response = requests.get(url)
 	soup = bs(response.text, 'html.parser')
@@ -25,8 +24,6 @@ def strip():
 	tresult = soup.find('div', class_="content_title").find('a').text
 	title = tresult.strip()
 	paragraph = soup.find('div',class_="rollover_description_inner").text.strip()
-
-
 
 	browser = init_browser()
 
@@ -37,13 +34,22 @@ def strip():
 	soup = bs(html, "html.parser")
 	a =soup.find('footer').a['data-fancybox-href']
 	featuredimageurl ="https://www.jpl.nasa.gov"+a
-'''
 	url = "https://twitter.com/marswxreport?lang=en"
 	browser.visit(url)
 
 	html = browser.html
-	soup = bs(html, "html.parser")
-	mars_weather =soup.find("p",class_="TweetTextSize TweetTextSize--normal js-tweet-text tweet-text").text
+	url = 'https://twitter.com/marswxreport?lang=en'
+	browser.visit(url)
+	# time.sleep(1)
+
+	html = browser.html
+	weather_soup = bs(html, 'html.parser')
+
+	# First, find a tweet with the data-name `Mars Weather`
+	# mars_weather_tweet = weather_soup.find('div', attrs={"class": "tweet", "data-name": "Mars Weather"})
+
+	# Set weather
+	mars_weather = weather_soup.find('p', 'tweet-text').get_text()
 
 
 	url = "https://space-facts.com/mars/"
